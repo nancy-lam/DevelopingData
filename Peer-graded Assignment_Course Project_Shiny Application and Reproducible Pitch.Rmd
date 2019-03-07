@@ -1,0 +1,104 @@
+---
+title: 'Peer-graded Assignment: Course Project: Shiny Application and Reproducible
+  Pitch'
+author: "Hoang Lam (Nancy Lam)"
+date: "March 6, 2019"
+output: ioslides_presentation
+  
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+This application allow the user to choose random number to create histogram plot
+
+## ui.R
+
+```{r}
+library(shiny)
+# Define UI for application that draws a histogram
+shinyUI(fluidPage(
+  
+   # Sidebar with a slider input for number of bins 
+  sidebarLayout(
+    sidebarPanel(
+       sliderInput(inputId = 'num',
+                   label = 'Choose a number',
+                   value = 30, min = 1, max = 100)
+       
+                  
+    ),
+    
+    # Show a plot of the generated distribution
+    mainPanel(
+       plotOutput("hist"),
+       verbatimTextOutput('stats')
+    )
+  )
+))
+
+```
+
+## server.R
+
+```{r}
+
+library(shiny)
+
+# Define server logic required to draw a histogram
+shinyServer(function(input, output) {
+   
+  output$hist <- renderPlot({
+    hist(rnorm(input$num))
+  })
+  
+  output$stats <- renderPrint({
+    summary(rnorm(input$num))
+  })
+})
+```
+
+## Histogram
+
+```{r, echo=FALSE}
+
+library(shiny)
+
+# Define UI for application that draws a histogram
+ui <- fluidPage(
+  
+   # Sidebar with a slider input for number of bins 
+  sidebarLayout(
+    sidebarPanel(
+       sliderInput(inputId = 'num',
+                   label = 'Choose a number',
+                   value = 30, min = 1, max = 100)
+       
+                  
+    ),
+    
+    # Show a plot of the generated distribution
+    mainPanel(
+       plotOutput("hist"),
+       verbatimTextOutput('stats')
+    )
+  )
+)
+
+# Define server logic required to draw a histogram
+server <- function(input, output) {
+   
+  output$hist <- renderPlot({
+    hist(rnorm(input$num))
+  })
+  
+  output$stats <- renderPrint({
+    summary(rnorm(input$num))
+  })
+}
+
+shinyApp(ui =ui, server = server)
+```
+
